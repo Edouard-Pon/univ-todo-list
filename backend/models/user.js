@@ -5,6 +5,7 @@ let db;
 
 (async () => {
     db = await connectToDatabase();
+    await db.collection('users').createIndex({ email: 1 }, { unique: true });
 })();
 
 const getUserCollection = () => db.collection('users');
@@ -17,14 +18,12 @@ const createUser = async (user) => {
 
 const getUserById = async (id) => {
     const collection = getUserCollection();
-    const user = await collection.findOne({ _id: new ObjectId(id) });
-    return user;
+    return await collection.findOne({ _id: new ObjectId(id) });
 };
 
 const getUserByEmail = async (email) => {
     const collection = getUserCollection();
-    const user = await collection.findOne({ email: email });
-    return user;
+    return await collection.findOne({ email: email });
 }
 
 const updateUser = async (id, user) => {
