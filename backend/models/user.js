@@ -21,6 +21,12 @@ const getUserById = async (id) => {
     return user;
 };
 
+const getUserByEmail = async (email) => {
+    const collection = getUserCollection();
+    const user = await collection.findOne({ email: email });
+    return user;
+}
+
 const updateUser = async (id, user) => {
     const collection = getUserCollection();
     const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: user });
@@ -37,5 +43,6 @@ module.exports = {
     createUser,
     getUserById,
     updateUser,
-    deleteUser
+    deleteUser,
+    getUserByEmail
 };
