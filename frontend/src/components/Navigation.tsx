@@ -17,9 +17,14 @@ function Navigation() {
           <Link to="/" className="text-white">Home</Link>
         </li>
         {isAuthenticated ? (
-          <li>
-            <button onClick={handleLogout} className="text-white">Logout</button>
-          </li>
+          <>
+            <li>
+              <button onClick={handleLogout} className="text-white">Logout</button>
+            </li>
+            <li>
+              <Link to="/enterprise_and_teams" className="text-white">Enterprise and Teams</Link>
+            </li>
+          </>
         ) : (
           <>
             <li>
@@ -28,6 +33,7 @@ function Navigation() {
             <li>
               <Link to="/register" className="text-white">Register</Link>
             </li>
+
           </>
         )}
       </ul>
