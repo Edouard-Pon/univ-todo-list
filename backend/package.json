@@ -1,0 +1,22 @@
+{
+  "name": "univ-todo-list-api",
+  "version": "1.0.0",
+  "description": "University Todo List API",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true,
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.0",
+    "mongodb": "^6.12.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "nodemon": "^3.1.9"
+  }
+}
