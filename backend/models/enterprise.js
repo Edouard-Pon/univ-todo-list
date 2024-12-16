@@ -58,5 +58,8 @@ module.exports = {
     createEnterprise,
     getEnterpriseById,
     updateEnterprise,
-    deleteEnterprise
+    deleteEnterprise,
+    assignTeamToEnterprise,
+    addTaskToTeam,
+    assignWorkerToTeam
 };
