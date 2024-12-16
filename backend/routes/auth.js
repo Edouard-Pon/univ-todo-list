@@ -10,7 +10,7 @@ router.post('/register', async (req, res) => {
     const { email, password } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = { email, mdp: hashedPassword };
+        const user = { email, password: hashedPassword };
         const result = await createUser(user);
         res.status(201).json(result);
     } catch (err) {
@@ -30,6 +30,7 @@ router.post('/login', async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ error: 'Invalid credentials' });
         }
+        return res.status(200).json({ message: 'Logged in', user: { user } });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

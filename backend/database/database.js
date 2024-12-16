@@ -4,7 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const { MongoClient } = require('mongodb');
 
-const client = new MongoClient(process.env.DATABASE_URL, { useUnifiedTopology: true });
+const client = new MongoClient(process.env.DATABASE_URL);
 
 async function connectToDatabase() {
   try {

@@ -12,7 +12,7 @@ const getUserCollection = () => db.collection('users');
 const createUser = async (user) => {
     const collection = getUserCollection();
     const result = await collection.insertOne(user);
-    return result.ops[0];
+    return { _id: result.insertedId, ...user };
 };
 
 const getUserById = async (id) => {
