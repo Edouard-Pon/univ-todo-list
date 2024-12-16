@@ -137,4 +137,31 @@ async function applySchemaValidation(db) {
   });
 }
 
+async function createIndexes() {
+  try {
+    await client.connect();
+    const database = client.db(process.env.DATABASE_NAME);
+
+    // Create unique index on name
+    await database.collection('enterprises').createIndex({ name: 1 }, { unique: true });
+
+    // Create unique index on team names
+    await database.collection('enterprises').createIndex({ 'teams.name': 1 }, { unique: true });
+
+    // Create unique index on task names
+    await database.collection('enterprises').createIndex({ 'tasks.name': 1 }, { unique: true });
+
+    // Create unique index on worker email
+    await database.collection('enterprises').createIndex({ 'workers.email': 1 }, { unique: true });
+
+    console.log('Indexes created successfully');
+  } catch (error) {
+    console.error('Error creating indexes:', error);
+  } finally {
+    await client.close();
+  }
+}
+
+createIndexes().catch(console.error);
+
 module.exports = { connectToDatabase };
