@@ -11,7 +11,11 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cors())
 
 const userRouter = require('./routes/user')
+const enterpriseRouter = require('./routes/enterprise')
+const authRouter = require('./routes/auth')
 
 app.use('/user', userRouter)
+app.use('/enterprise', enterpriseRouter)
+app.use('/auth', authRouter)
 
 app.listen(process.env.PORT || 3000)
