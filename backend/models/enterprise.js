@@ -54,6 +54,23 @@ const assignWorkerToTeam = async (enterpriseId, teamId, worker) => {
     return result.modifiedCount > 0;
 }
 
+const changeTaskStatus = async (enterpriseId, teamId, taskId, status) => {
+    const collection = getEnterpriseCollection();
+    const result = await collection.updateOne({ _id: new ObjectId(enterpriseId), "teams._id": new ObjectId(teamId), "teams.tasks._id": new ObjectId(taskId) }, { $set: { "teams.tasks.$.status": status } });
+    return result.modifiedCount > 0;
+}
+
+const getTaskById = async (enterpriseId, teamId, taskId) => {
+    const collection = getEnterpriseCollection();
+    return await collection.findOne({ _id: new ObjectId(enterpriseId), "teams._id": new ObjectId(teamId), "teams.tasks._id": new ObjectId(taskId) });
+}
+
+const deleteTask = async (enterpriseId, teamId, taskId) => {
+    const collection = getEnterpriseCollection();
+    const result = await collection.updateOne({ _id: new ObjectId(enterpriseId), "teams._id": new ObjectId(teamId) }, { $pull: { "teams.$.tasks": { _id: new ObjectId(taskId) } } });
+    return result.modifiedCount > 0;
+}
+
 module.exports = {
     createEnterprise,
     getEnterpriseById,
@@ -61,5 +78,8 @@ module.exports = {
     deleteEnterprise,
     assignTeamToEnterprise,
     addTaskToTeam,
-    assignWorkerToTeam
+    assignWorkerToTeam,
+    changeTaskStatus,
+    getTaskById,
+    deleteTask
 };

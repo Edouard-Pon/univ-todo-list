@@ -1,7 +1,11 @@
 const express = require('express');
 const { createEnterprise, getEnterpriseById, updateEnterprise, deleteEnterprise,
     assignTeamToEnterprise,
-    addTaskToTeam } = require('../models/enterprise');
+    addTaskToTeam,
+    changeTaskStatus,
+    getTaskById,
+    deleteTask
+} = require('../models/enterprise');
 const { ObjectId } = require('mongodb');
 
 const router = express.Router();
@@ -124,26 +128,50 @@ router.post('/:id/teams/:teamId/tasks', async (req, res) => {
 // Change task status
 router.put('/:id/teams/:teamId/tasks/:taskId/status', async (req, res) => {
     try {
-        const enterprise = await getEnterpriseById(req.params.id);
-        if (!enterprise) {
-            return res.status(404).json({ error: 'Enterprise not found' });
+        task = {}
+
+        if (req.body.status) task.status = req.body.status
+
+        if (task.status === undefined) {
+            return res.status(400).json({ error: 'Missing required fields' });
         }
-        const team = enterprise.teams.find(t => t._id.toString() === req.params.teamId);
-        if (!team) {
-            return res.status(404).json({ error: 'Team not found' });
+
+        if (!await changeTaskStatus(req.params.id, req.params.teamId, req.params.taskId, task.status)) {
+            return res.status(404).json({ error: 'Enterprise, team or task not found' });
         }
-        const task = team.tasks.find(t => t._id.toString() === req.params.taskId);
-        if (!task) {
-            return res.status(404).json({ error: 'Task not found' });
-        }
-        task.status = req.body.status;
-        await updateEnterprise(req.params.id, enterprise);
         res.json({ message: 'Task status updated successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
+// Get task by ID
+router.get('/:id/teams/:teamId/tasks/:taskId', async (req, res) => {
+    try {
+        const task = await getTaskById(req.params.id, req.params.teamId, req.params.taskId);
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+        res.json(task);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Delete a task
+router.delete('/:id/teams/:teamId/tasks/:taskId', async (req, res) => {
+    try {
+        const deleted = await deleteTask(req.params.id, req.params.teamId, req.params.taskId);
+        if (!deleted) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+        res.status(200).json({ message: 'Task deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Assign a worker to a team
 router.post('/:id/teams/:teamId/workers', async (req, res) => {
     try {
         const worker = {}
